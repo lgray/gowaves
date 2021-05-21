@@ -3,7 +3,6 @@ package internal
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"sort"
@@ -11,10 +10,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/pkg/errors"
-
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	jsoniter "github.com/json-iterator/go"
+	"github.com/pkg/errors"
 	"github.com/rakyll/statik/fs"
 	"github.com/wavesplatform/gowaves/cmd/wmd/internal/data"
 	"github.com/wavesplatform/gowaves/cmd/wmd/internal/state"
@@ -34,6 +33,9 @@ const (
 	fromPlaceholder        = "From"
 	toPlaceholder          = "To"
 )
+
+// nickeskov: this is full compatible drop-in replacement of "encoding/json"
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 // Logger is a middleware that logs the start and end of each request, along
 // with some useful data about what was requested, what the response status was,

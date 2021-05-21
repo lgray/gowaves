@@ -19,6 +19,7 @@ require (
 	github.com/howeyc/gopass v0.0.0-20190910152052-7cb4b85ec19c
 	github.com/influxdata/influxdb1-client v0.0.0-20200515024757-02f0bf5dbca3
 	github.com/jinzhu/copier v0.0.0-20190625015134-976e0346caa8
+	github.com/json-iterator/go v1.1.11
 	github.com/kilic/bls12-381 v0.0.0-20200820230200-6b2c19996391
 	github.com/kilic/bn254 v0.0.0-20200902152204-ab63fe16fead
 	github.com/magiconair/properties v1.8.1
