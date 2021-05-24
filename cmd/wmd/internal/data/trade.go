@@ -165,6 +165,7 @@ func (t *Trade) UnmarshalBinary(data []byte) error {
 }
 
 // TradeInfo is an API representation of the Trade
+//easyjson:json
 type TradeInfo struct {
 	Timestamp uint64          `json:"timestamp"`
 	ID        crypto.Digest   `json:"id"`
@@ -176,6 +177,9 @@ type TradeInfo struct {
 	Seller    proto.Address   `json:"seller"`
 	Matcher   proto.Address   `json:"matcher"`
 }
+
+//easyjson:json
+type TradesInfo []TradeInfo
 
 func NewTradeInfo(trade Trade, amountAssetPrecision, priceAssetPrecision uint) TradeInfo {
 	return TradeInfo{

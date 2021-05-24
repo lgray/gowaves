@@ -18,6 +18,7 @@ func (v AssetID) MarshalJSON() ([]byte, error) {
 	return crypto.Digest(v).MarshalJSON()
 }
 
+//easyjson:json
 type TickerInfo struct {
 	Symbol                       string          `json:"symbol"`
 	AmountAssetID                AssetID         `json:"amountAssetID"`
@@ -41,6 +42,9 @@ type TickerInfo struct {
 	DayPriceVolume               Decimal         `json:"24h_priceVolume"`
 	Timestamp                    uint64          `json:"timestamp"`
 }
+
+//easyjson:json
+type TickersInfo []TickerInfo
 
 func NewTickerInfo(symbol string, amountAsset, priceAsset AssetInfo, amountAssetIssuerBalance, priceAssetIssuerBalance uint64, candle Candle) TickerInfo {
 	as := int64(math.Pow10(int(amountAsset.Decimals)))

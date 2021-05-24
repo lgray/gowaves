@@ -66,12 +66,16 @@ func (md *Market) UnmarshalBinary(data []byte) error {
 	return nil
 }
 
+//easyjson:json
 type MarketInfo struct {
 	TickerInfo
 	TotalTrades   int    `json:"totalTrades"`
 	FirstTradeDay uint64 `json:"firstTradeDay"`
 	LastTradeDay  uint64 `json:"lastTradeDay"`
 }
+
+//easyjson:json
+type MarketsInfo []MarketInfo
 
 func NewMarketInfo(ticker TickerInfo, md Market) MarketInfo {
 	return MarketInfo{

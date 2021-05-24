@@ -19,10 +19,14 @@ import (
 	"google.golang.org/grpc/connectivity"
 )
 
+//easyjson:json
 type Substitution struct {
 	Symbol  string  `json:"symbol"`
 	AssetID AssetID `json:"assetID"`
 }
+
+//easyjson:json
+type Substitutions []Substitution
 
 type BySymbols []Substitution
 

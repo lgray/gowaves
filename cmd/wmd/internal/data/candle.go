@@ -177,6 +177,7 @@ func ScaleTimeFrame(tf uint32, scale int) uint32 {
 	return (tf / s) * s
 }
 
+//easyjson:json
 type CandleInfo struct {
 	Timestamp   uint64  `json:"timestamp"`
 	Open        Decimal `json:"open"`
@@ -188,6 +189,9 @@ type CandleInfo struct {
 	PriceVolume Decimal `json:"priceVolume"`
 	Confirmed   bool    `json:"confirmed"`
 }
+
+//easyjson:json
+type CandlesInfo []CandleInfo
 
 func EmptyCandleInfo(amountAssetDecimals, priceAssetDecimals uint, timestamp uint64) CandleInfo {
 	return CandleInfo{

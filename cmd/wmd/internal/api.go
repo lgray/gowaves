@@ -60,11 +60,6 @@ func Logger(l *zap.Logger) func(next http.Handler) http.Handler {
 	}
 }
 
-type status struct {
-	CurrentHeight int           `json:"current_height"`
-	LastBlockID   proto.BlockID `json:"last_block_id"`
-}
-
 type DataFeedAPI struct {
 	interrupt <-chan struct{}
 	done      chan struct{}
@@ -147,7 +142,7 @@ func (a *DataFeedAPI) status(w http.ResponseWriter, _ *http.Request) {
 		http.Error(w, fmt.Sprintf("Failed to complete request: %s", err.Error()), http.StatusInternalServerError)
 		return
 	}
-	s := status{CurrentHeight: h, LastBlockID: blockID}
+	s := data.WMDStatus{CurrentHeight: h, LastBlockID: blockID}
 	err = json.NewEncoder(w).Encode(s)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to marshal status to JSON: %s", err.Error()), http.StatusInternalServerError)
@@ -157,7 +152,7 @@ func (a *DataFeedAPI) status(w http.ResponseWriter, _ *http.Request) {
 
 func (a *DataFeedAPI) getSymbols(w http.ResponseWriter, _ *http.Request) {
 	s := a.Symbols.All()
-	err := json.NewEncoder(w).Encode(s)
+	err := json.NewEncoder(w).Encode(data.Substitutions(s))
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to marshal Symbols to JSON: %s", err.Error()), http.StatusInternalServerError)
 		return
@@ -202,7 +197,7 @@ func (a *DataFeedAPI) markets(w http.ResponseWriter, _ *http.Request) {
 		mis = append(mis, mi)
 	}
 	sort.Sort(data.ByMarkets(mis))
-	err = json.NewEncoder(w).Encode(mis)
+	err = json.NewEncoder(w).Encode(data.MarketsInfo(mis))
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to marshal Markets to JSON: %s", err.Error()), http.StatusInternalServerError)
 		return
@@ -246,7 +241,7 @@ func (a *DataFeedAPI) tickers(w http.ResponseWriter, _ *http.Request) {
 		tis = append(tis, ti)
 	}
 	sort.Sort(data.ByTickers(tis))
-	err = json.NewEncoder(w).Encode(tis)
+	err = json.NewEncoder(w).Encode(data.TickersInfo(tis))
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to marshal Tickers to JSON: %s", err.Error()), http.StatusInternalServerError)
 		return
@@ -346,7 +341,7 @@ func (a *DataFeedAPI) trades(w http.ResponseWriter, r *http.Request) {
 	if len(tis) < limit {
 		limit = len(tis)
 	}
-	err = json.NewEncoder(w).Encode(tis[:limit])
+	err = json.NewEncoder(w).Encode(data.TradesInfo(tis[:limit]))
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to marshal Trades to JSON: %s", err.Error()), http.StatusInternalServerError)
 		return
@@ -394,7 +389,7 @@ func (a *DataFeedAPI) tradesRange(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to convert trades: %s", err.Error()), http.StatusInternalServerError)
 	}
-	err = json.NewEncoder(w).Encode(tis)
+	err = json.NewEncoder(w).Encode(data.TradesInfo(tis))
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to marshal Trades to JSON: %s", err.Error()), http.StatusInternalServerError)
 		return
@@ -451,7 +446,7 @@ func (a *DataFeedAPI) tradesByAddress(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("Failed to convert to TradeInfos: %s", err.Error()), http.StatusInternalServerError)
 		return
 	}
-	err = json.NewEncoder(w).Encode(tis)
+	err = json.NewEncoder(w).Encode(data.TradesInfo(tis))
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to marshal Trades to JSON: %s", err.Error()), http.StatusInternalServerError)
 		return
@@ -531,7 +526,7 @@ func (a *DataFeedAPI) candles(w http.ResponseWriter, r *http.Request) {
 		i++
 	}
 	sort.Sort(res)
-	err = json.NewEncoder(w).Encode(res)
+	err = json.NewEncoder(w).Encode(data.CandlesInfo(res))
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to marshal CandleInfos to JSON: %s", err.Error()), http.StatusInternalServerError)
 		return
@@ -613,7 +608,7 @@ func (a *DataFeedAPI) candlesRange(w http.ResponseWriter, r *http.Request) {
 		i++
 	}
 	sort.Sort(res)
-	err = json.NewEncoder(w).Encode(res)
+	err = json.NewEncoder(w).Encode(data.CandlesInfo(res))
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to marshal CandleInfos to JSON: %s", err.Error()), http.StatusInternalServerError)
 		return
