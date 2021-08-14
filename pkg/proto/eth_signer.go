@@ -185,7 +185,7 @@ func (s londonSigner) Hash(tx *EthereumTransaction) EthereumHash {
 	rlpData := []byte{byte(tx.EthereumTxType())}
 	rlpData = hashValues.MarshalTo(rlpData)
 
-	return Keccak256EthereumHash(rlpData)
+	return NewKeccak256EthereumHash(rlpData)
 }
 
 // BERLIN signer
@@ -249,7 +249,7 @@ func (s eip2930Signer) Hash(tx *EthereumTransaction) EthereumHash {
 	rlpData := []byte{byte(tx.EthereumTxType())}
 	rlpData = hashValues.MarshalTo(rlpData)
 
-	return Keccak256EthereumHash(rlpData)
+	return NewKeccak256EthereumHash(rlpData)
 }
 
 type eip155Signer struct {
@@ -325,7 +325,7 @@ func (s eip155Signer) Hash(tx *EthereumTransaction) EthereumHash {
 
 	rlpData := hashValues.MarshalTo(nil)
 
-	return Keccak256EthereumHash(rlpData)
+	return NewKeccak256EthereumHash(rlpData)
 }
 
 // HomesteadTransaction implements TransactionInterface using the
@@ -408,7 +408,7 @@ func (fs FrontierSigner) Hash(tx *EthereumTransaction) EthereumHash {
 		//panic("Unsupported transaction type: %d", tx.typ)
 		return EthereumHash{}
 	}
-	return Keccak256EthereumHash(rlpData)
+	return NewKeccak256EthereumHash(rlpData)
 }
 
 // decodeSignature decodes r, s, v signature values from bytes.
